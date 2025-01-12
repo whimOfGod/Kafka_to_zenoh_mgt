@@ -1,0 +1,64 @@
+services:
+
+  zenoh_broker:
+    image: eclipse/zenoh:latest
+    container_name: zenoh_broker
+    ports:
+      - "7447:7447"
+    networks:
+      - zenoh_network
+    command: /usr/bin/zenohd --listen tcp/0.0.0.0:7447
+
+
+  indbf:
+    build:
+      context: ./iNDBF
+      dockerfile: Dockerfile
+    depends_on:
+      - zenoh_broker
+    networks:
+      - zenoh_network
+
+  ndppf:
+    build:
+      context: ./NDPPF
+      dockerfile: Dockerfile
+    depends_on:
+      - indbf
+    networks:
+      - zenoh_network
+
+  endbf:
+    build:
+      context: ./eNDBF
+      dockerfile: Dockerfile
+    depends_on:
+      - ndppf
+    ports:
+      - "7448:7448"
+    networks:
+      - zenoh_network
+
+  fl_server:
+    build:
+      context: ./FLAD/FLServer
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    depends_on:
+      - zenoh_broker
+    networks:
+      - zenoh_network
+
+  fl_client:
+    build:
+      context: ./FLAD/FLClient
+      dockerfile: Dockerfile
+    depends_on:
+      - fl_server
+    networks:
+      - zenoh_network
+
+networks:
+  zenoh_network:
+    driver: bridge

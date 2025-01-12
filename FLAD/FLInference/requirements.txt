@@ -1,0 +1,9 @@
+tensorflow==2.7.0
+jsonschema
+numpy==1.21.2
+scikit-learn==1.0
+kafka-python==2.0.2
+ntplib==0.4.0
+
+# Installer Zenoh directement depuis le dépôt GitHub
+git+https://github.com/eclipse-zenoh/zenoh-python.git
