@@ -1,8 +1,10 @@
 import time
 from zenoh import Config, open
+import json
 
 conf = Config()
-conf.insert_json5("connect", {"endpoint": "tcp/zenoh_broker:7447"})
+conf.insert_json5("connect", json.dumps({"endpoints": ["tcp/zenoh_broker:7447"]}))
+
 session = open(conf)
 
 
@@ -15,10 +17,10 @@ sub = session.declare_subscriber(key, receive_data)
 
 print(f'iNDBF ready to receive data on key: {key}')
 
-try:
-    while True:
-        time.sleep(1)
-except KeyboardInterrupt:
-    print('Stopping iNDBF...')
-    sub.undeclare()
-    session.close()
+# try:
+#     while True:
+#         time.sleep(1)
+# except KeyboardInterrupt:
+#     print('Stopping iNDBF...')
+#     sub.undeclare()
+#     session.close()

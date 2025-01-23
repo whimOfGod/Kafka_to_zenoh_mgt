@@ -3,7 +3,8 @@ import json
 from zenoh import Config, open
 
 conf = Config()
-conf.insert_json5("connect", {"endpoint": "tcp/zenoh_broker:7447"})
+conf.insert_json5("connect", json.dumps({"endpoints": ["tcp/zenoh_broker:7447"]}))
+
 session = open(conf)
 
 input_key = 'data/preprocessed'
@@ -22,10 +23,10 @@ sub = session.declare_subscriber(input_key, aggregate_results)
 
 print(f'FL Server ready to aggregate data from key: {input_key}')
 
-try:
-    while True:
-        pass
-except KeyboardInterrupt:
-    print('Stopping FL Server...')
-    sub.undeclare()
-    session.close()
+# try:
+#     while True:
+#         pass
+# except KeyboardInterrupt:
+#     print('Stopping FL Server...')
+#     sub.undeclare()
+#     session.close()

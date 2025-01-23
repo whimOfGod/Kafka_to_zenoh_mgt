@@ -2,12 +2,10 @@ import time
 import json
 from zenoh import Config, open
 
-# Remplacer ceci
-# session = zenoh.open({"connect": "tcp/zenoh_broker:7447"}) ❌
 
-# Par ceci
 conf = Config()
-conf.insert_json5("connect", {"endpoint": "tcp/zenoh_broker:7447"})
+import json
+conf.insert_json5("connect", json.dumps({"endpoints": ["tcp/zenoh_broker:7447"]}))
 
 session = open(conf)
 
@@ -27,10 +25,10 @@ sub = session.declare_subscriber(input_key, train_on_data)
 
 print(f'FL Client ready to train on data from key: {input_key}')
 
-try:
-    while True:
-        time.sleep(1)
-except KeyboardInterrupt:
-    print('Stopping FL Client...')
-    sub.undeclare()
-    session.close()
+# try:
+#     while True:
+#         time.sleep(1)
+# except KeyboardInterrupt:
+#     print('Stopping FL Client...')
+#     sub.undeclare()
+#     session.close()

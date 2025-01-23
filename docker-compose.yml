@@ -1,5 +1,4 @@
 services:
-
   zenoh_broker:
     image: eclipse/zenoh:latest
     container_name: zenoh_broker
@@ -9,11 +8,11 @@ services:
       - zenoh_network
     command: ["--listen", "tcp/0.0.0.0:7447"]
 
-
   indbf:
     build:
-      context: ./iNDBF
+      context: .
       dockerfile: Dockerfile
+    command: ["python", "INDBF/main.py"]
     depends_on:
       - zenoh_broker
     networks:
@@ -21,8 +20,9 @@ services:
 
   ndppf:
     build:
-      context: ./NDPPF
+      context: .
       dockerfile: Dockerfile
+    command: ["python", "NDPPF/preprocess.py"]
     depends_on:
       - indbf
     networks:
@@ -30,8 +30,9 @@ services:
 
   endbf:
     build:
-      context: ./eNDBF
+      context: .
       dockerfile: Dockerfile
+    command: ["python", "eNDBF/main.py"]
     depends_on:
       - ndppf
     ports:
@@ -41,8 +42,9 @@ services:
 
   fl_server:
     build:
-      context: ./FLAD/FLServer
+      context: .
       dockerfile: Dockerfile
+    command: ["python", "FLAD/FLServer/server_driver.py"]
     ports:
       - "5000:5000"
     depends_on:
@@ -52,8 +54,9 @@ services:
 
   fl_client:
     build:
-      context: ./FLAD/FLClient
+      context: .
       dockerfile: Dockerfile
+    command: ["python", "FLAD/FLClient/client_driver.py"]
     depends_on:
       - fl_server
     networks:
