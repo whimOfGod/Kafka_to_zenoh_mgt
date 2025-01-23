@@ -4,7 +4,7 @@ import json
 from zenoh import Config, open
 
 conf = Config()
-conf.insert_json5("connect", {"endpoint": "tcp/zenoh_broker:7447"})
+conf.insert_json5("connect/endpoints", json.dumps(["tcp/127.0.0.1/7447"]))
 session = open(conf)
 
 input_key = 'data/raw'
@@ -24,10 +24,3 @@ sub = session.declare_subscriber(input_key, preprocess_data)
 
 print(f'NDPPF ready to preprocess data on key: {input_key}')
 
-try:
-    while True:
-        time.sleep(1)
-except KeyboardInterrupt:
-    print('Stopping NDPPF...')
-    sub.undeclare()
-    session.close()

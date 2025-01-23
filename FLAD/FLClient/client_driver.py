@@ -7,9 +7,9 @@ from zenoh import Config, open
 
 # Par ceci
 conf = Config()
-conf.insert_json5("connect", {"endpoint": "tcp/zenoh_broker:7447"})
-
+conf.insert_json5("connect/endpoints", json.dumps(["tcp/127.0.0.1/7447"]))
 session = open(conf)
+
 
 input_key = 'data/raw'
 
@@ -27,10 +27,10 @@ sub = session.declare_subscriber(input_key, train_on_data)
 
 print(f'FL Client ready to train on data from key: {input_key}')
 
-try:
-    while True:
-        time.sleep(1)
-except KeyboardInterrupt:
-    print('Stopping FL Client...')
-    sub.undeclare()
-    session.close()
+# try:
+#     while True:
+#         time.sleep(1)
+# except KeyboardInterrupt:
+#     print('Stopping FL Client...')
+#     sub.undeclare()
+#     session.close()

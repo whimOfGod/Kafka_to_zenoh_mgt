@@ -4,7 +4,7 @@ import json
 from zenoh import Config, open
 
 conf = Config()
-conf.insert_json5("connect", {"endpoint": "tcp/zenoh_broker:7447"})
+conf.insert_json5("connect/endpoints", json.dumps(["tcp/127.0.0.1/7447"]))
 session = open(conf)
 
 input_key = 'data/preprocessed'
@@ -23,10 +23,10 @@ sub = session.declare_subscriber(input_key, inference)
 
 print(f'FL Inference Agent ready to detect anomalies on key: {input_key}')
 
-try:
-    while True:
-        time.sleep(1)
-except KeyboardInterrupt:
-    print('Stopping FL Inference Agent...')
-    sub.undeclare()
-    session.close()
+# try:
+#     while True:
+#         time.sleep(1)
+# except KeyboardInterrupt:
+#     print('Stopping FL Inference Agent...')
+#     sub.undeclare()
+#     session.close()
