@@ -7,7 +7,7 @@ services:
       - "7447:7447"
     networks:
       - zenoh_network
-    command: /usr/bin/zenohd --listen tcp/0.0.0.0:7447
+    command: ["--listen", "tcp/0.0.0.0:7447"]
 
 
   indbf:

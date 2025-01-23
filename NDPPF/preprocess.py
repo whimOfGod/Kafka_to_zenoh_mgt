@@ -1,16 +1,18 @@
-import zenoh
-import json
 import time
+import json
 
-# Initialisation Zenoh
-session = zenoh.open({"connect": "tcp/zenoh_broker:7447"}) # Connexion au broker Zenoh
+from zenoh import Config, open
+
+conf = Config()
+conf.insert_json5("connect", {"endpoint": "tcp/zenoh_broker:7447"})
+session = open(conf)
+
 input_key = 'data/raw'
 output_key = 'data/preprocessed'
 
 def preprocess_data(sample):
     try:
         data = json.loads(sample.payload.decode())
-        # Simuler un prétraitement simple (normalisation d'une métrique)
         if 'value' in data:
             data['value'] = data['value'] / 100.0
             print(f"Preprocessed data: {data}")
@@ -18,7 +20,6 @@ def preprocess_data(sample):
     except Exception as e:
         print(f"Error in preprocessing: {e}")
 
-# Créer un souscripteur
 sub = session.declare_subscriber(input_key, preprocess_data)
 
 print(f'NDPPF ready to preprocess data on key: {input_key}')

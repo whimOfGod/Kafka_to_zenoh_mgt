@@ -1,13 +1,15 @@
-import zenoh
-import json
 import time
+import json
 
-session = zenoh.open({"connect": "tcp/zenoh_broker:7447"}) # Connexion au broker Zenoh
+from zenoh import Config, open
+
+conf = Config()
+conf.insert_json5("connect", {"endpoint": "tcp/zenoh_broker:7447"})
+session = open(conf)
+
 input_key = 'data/preprocessed'
-
 threshold = 0.5
 
-# Fonction d'inférence basique pour la détection d'anomalies
 def inference(sample):
     try:
         data = json.loads(sample.payload.decode())

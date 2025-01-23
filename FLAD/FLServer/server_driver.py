@@ -1,17 +1,18 @@
-import zenoh
 import json
 
-session = zenoh.open({"connect": "tcp/zenoh_broker:7447"}) # Connexion au broker Zenoh
-input_key = 'data/preprocessed'
+from zenoh import Config, open
 
+conf = Config()
+conf.insert_json5("connect", {"endpoint": "tcp/zenoh_broker:7447"})
+session = open(conf)
+
+input_key = 'data/preprocessed'
 aggregated_results = []
 
 def aggregate_results(sample):
     try:
         data = json.loads(sample.payload.decode())
         aggregated_results.append(data)
-        print(f"Aggregated Data: {aggregated_results}")
-        # Calculer la moyenne des valeurs collectées
         avg_result = sum([sum(d.values()) for d in aggregated_results]) / len(aggregated_results)
         print(f"Global Model Value: {avg_result}")
     except Exception as e:

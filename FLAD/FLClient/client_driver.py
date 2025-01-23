@@ -1,16 +1,23 @@
-import zenoh
-import json
 import time
+import json
+from zenoh import Config, open
 
-session = zenoh.open({"connect": "tcp/zenoh_broker:7447"}) # Connexion au broker Zenoh
-input_key = 'data/preprocessed'
+# Remplacer ceci
+# session = zenoh.open({"connect": "tcp/zenoh_broker:7447"}) ❌
+
+# Par ceci
+conf = Config()
+conf.insert_json5("connect", {"endpoint": "tcp/zenoh_broker:7447"})
+
+session = open(conf)
+
+input_key = 'data/raw'
 
 # Simulated FL Client Training Function
 def train_on_data(sample):
     try:
         data = json.loads(sample.payload.decode())
         print(f"Training on data: {data}")
-        # Simuler un simple entraînement (moyenne des valeurs)
         trained_value = sum(data.values()) / len(data)
         print(f"Trained Value: {trained_value}")
     except Exception as e:
